@@ -50,6 +50,40 @@ function CsvViewer() {
         setCurrentIndex(0);
     };
 
+    const handleDeleteDataSet = async (index) => {
+        const dataSetToDelete = dataSets[index];
+        try {
+            // Delete dataset from server
+            const response = await fetch(`http://localhost:5000/delete-dataset`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filePath: dataSetToDelete.filePath }),
+            });
+
+            if (response.ok) {
+                // Remove dataset from state
+                const updatedDataSets = [...dataSets];
+                updatedDataSets.splice(index,1);
+                setDataSets(updatedDataSets);
+                // Reset current index if needed
+                if (index === currentDataIndex) {
+                    setCurrentDataIndex(0);
+                    setCurrentIndex(0);
+                } else if (index < currentDataIndex) {
+                    setCurrentDataIndex(currentDataIndex - 1);
+                    setCurrentIndex(0);
+                }
+                console.log('Dataset deleted successfully');
+            } else {
+                console.error('Failed to delete dataset');
+            }
+        } catch (error) {
+            console.error('Error deleting dataset:',error);
+        }
+    };
+
     return (
         <div>
             <h1>CSV Card Viewer</h1>
@@ -57,9 +91,12 @@ function CsvViewer() {
                 <div>
                     <div className="data-set-selector">
                         {dataSets.map((dataSet,index) => (
-                            <button key={index} onClick={() => handleDataSetChange(index)}>
-                                {`DataSet ${index + 1}`}
-                            </button>
+                            <div key={index}>
+                                <button onClick={() => handleDataSetChange(index)}>
+                                    {`DataSet ${index + 1}`}
+                                </button>
+                                <button onClick={() => handleDeleteDataSet(index)}>Delete</button>
+                            </div>
                         ))}
                     </div>
                     <div className="card-container">
