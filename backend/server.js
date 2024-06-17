@@ -22,18 +22,31 @@ const storage = multer.diskStorage({
 		cb(null, uploadPath)
 	},
 	filename: (req, file, cb) => {
-		cb(null, "uploaded.csv") // Always save as 'uploaded.csv'
+		cb(null, `${Date.now()}-${file.originalname}`)
 	},
 })
 
 const upload = multer({ storage })
 
 // Endpoint to handle file upload
-app.post("/upload", upload.single("file"), (req, res) => {
-	console.log("File uploaded:", req.file) // Debug log
-	res.json({ filePath: `/uploads/${req.file.filename}` })
+app.post("/upload", upload.array("files", 10), (req, res) => {
+	// Allow up to 10 files
+	const filePaths = req.files.map((file) => `/uploads/${file.filename}`)
+	res.json({ filePaths })
 })
 
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`)
+})
+
+// List uploaded files
+app.get("/uploaded-files", (req, res) => {
+	const uploadPath = path.join(__dirname, "uploads")
+	fs.readdir(uploadPath, (err, files) => {
+		if (err) {
+			return res.status(500).json({ error: "Unable to list files" })
+		}
+		const filePaths = files.map((file) => `/uploads/${file}`)
+		res.json(filePaths)
+	})
 })
