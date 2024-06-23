@@ -103,11 +103,14 @@ function CsvViewer() {
                         <div className="card">
                             <div className="card-content">
                                 <h2>{dataSets[currentDataIndex].data[currentIndex]['Question']}</h2>
-                                <p>{dataSets[currentDataIndex].data[currentIndex]['Answer1']}</p>
-                                <p>{dataSets[currentDataIndex].data[currentIndex]['Answer2']}</p>
-                                <p>{dataSets[currentDataIndex].data[currentIndex]['Answer3']}</p>
-                                <p>{dataSets[currentDataIndex].data[currentIndex]['Answer4']}</p>
+                                {Object.keys(dataSets[currentDataIndex].data[currentIndex])
+                                    .filter(key => key.startsWith('Answer'))
+                                    .map((key,i) => (
+                                        <p key={i}>{dataSets[currentDataIndex].data[currentIndex][key]}</p>
+                                    ))}
+                                <h3>Correct Explanation</h3>
                                 <p dangerouslySetInnerHTML={{ __html: dataSets[currentDataIndex].data[currentIndex]['CorrectExplanation'] }}></p>
+                                <h3>Incorrect Explanation</h3>
                                 <p dangerouslySetInnerHTML={{ __html: dataSets[currentDataIndex].data[currentIndex]['IncorrectExplanation'] }}></p>
                             </div>
                         </div>
