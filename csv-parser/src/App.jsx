@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router,Route,Routes } from 'react-router-dom';
 import LandingPage from './landing-page/LandingPage';
+import TakeQuiz from './landing-page/components/takeQuiz';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/Assessment/:id" element={<TakeQuiz />} />
         </Routes>
       </main>
     </Router>

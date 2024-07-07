@@ -55,6 +55,11 @@ app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`)
 })
 
+const generateIdFromFileName = (fileName) => {
+	const match = fileName.match(/\d+/) // Extracts the first numeric part from the file name
+	return match ? match[0] : fileName // If no numeric part is found, return the entire file name
+}
+
 // List uploaded files
 app.get("/uploaded-files", (req, res) => {
 	const uploadPath = path.join(__dirname, "uploads")
@@ -63,6 +68,7 @@ app.get("/uploaded-files", (req, res) => {
 			return res.status(500).json({ error: "Unable to list files" })
 		}
 		const filePaths = files.map((file) => ({
+			id: generateIdFromFileName(file), // Generate unique ID based on file name
 			name: path.parse(file).name,
 		}))
 		res.json(filePaths)

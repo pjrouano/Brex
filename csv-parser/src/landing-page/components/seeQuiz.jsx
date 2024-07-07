@@ -3,9 +3,11 @@ import axios from 'axios';
 import { Grid,Card,CardContent,Typography,CardActions,Button,CardActionArea } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const seeQuiz = () => {
     const [quizzes,setQuizzes] = useState([]);
+    const navigate = useNavigate();
 
     const Img = styled("img")({
         margin: "auto",
@@ -13,6 +15,10 @@ const seeQuiz = () => {
         maxWidth: "100%",
         maxHeight: "100%",
     });
+
+    function handleTakeQuiz(id) {
+        navigate(`/Assessment/${id}`)
+    }
 
     useEffect(() => {
         // Fetch the list of uploaded quizzes from the backend
@@ -31,7 +37,7 @@ const seeQuiz = () => {
             {quizzes.map((quiz,index) => (
                 <Grid item key={index} style={{ margin: '1rem' }}>
                     <Card sx={{ maxWidth: 345 }}>
-                        <CardActionArea>
+                        <CardActionArea onClick={() => handleTakeQuiz(quiz.id)}>
                             <Grid item xs={12} sx={{ display: 'flex',justifyContent: 'center' }}>
                                 <Stack sx={{ width: 150,height: 150 }}>
                                     <Img alt={quiz.name} src={'logo.png'} />
