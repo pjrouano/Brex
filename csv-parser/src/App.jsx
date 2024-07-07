@@ -1,29 +1,16 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router,Route,Routes,Link } from 'react-router-dom';
-import UploadPage from './components/UploadPage';
-import CsvViewer from './components/CsvViewer';
-import './App.css'
+import { BrowserRouter as Router,Route,Routes } from 'react-router-dom';
+import LandingPage from './landing-page/LandingPage';
 
 function App() {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Upload CSV</Link>
-            </li>
-            <li>
-              <Link to="/view">View CSV</Link>
-            </li>
-          </ul>
-        </nav>
+      <main>
         <Routes>
-          <Route path="/" element={<UploadPage />} />
-          <Route path="/view" element={<CsvViewer />} />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
-      </div>
+      </main>
     </Router>
   );
 }

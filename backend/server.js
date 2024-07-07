@@ -62,7 +62,9 @@ app.get("/uploaded-files", (req, res) => {
 		if (err) {
 			return res.status(500).json({ error: "Unable to list files" })
 		}
-		const filePaths = files.map((file) => `/uploads/${file}`)
+		const filePaths = files.map((file) => ({
+			name: path.parse(file).name,
+		}))
 		res.json(filePaths)
 	})
 })
