@@ -59,18 +59,21 @@
 
 .explanation-section {
     margin-bottom: 20px;
-    text-align: center !important;
+    text-align: center;
     width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .explanation-section h3 {
     margin-top: 10px;
-    text-align: center !important;
+    text-align: center;
 }
 
 .explanation-section p {
     margin: 5px 0;
-    text-align: center !important;
+    text-align: center;
 }
 
 .navigation {
