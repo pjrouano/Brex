@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import React,{ useState,useEffect } from 'react';
 import Papa from 'papaparse';
 import '../../css/TakeQuiz.css'; // Import the CSS file for styling
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons'; // Import the specific icon
 
 function TakeQuiz() {
     const { id } = useParams();
@@ -80,17 +82,25 @@ function TakeQuiz() {
                             .map((key,i) => {
                                 const isSelected = selectedAnswer === data[currentIndex][key];
                                 const isCorrect = i + 1 === data[currentIndex]['CorrectAns'];
+                                let buttonClass = `answer-button answer-${i + 1}`;
+                                if (selectedAnswer !== null) {
+                                    if (isSelected) {
+                                        buttonClass += isCorrect ? ' correct' : ' wrong';
+                                    } else if (isCorrect) {
+                                        buttonClass += ' correct';
+                                    } else {
+                                        buttonClass += ' not-chosen';
+                                    }
+                                }
                                 return (
                                     <button
                                         key={i}
-                                        className={`answer-button answer-${i + 1} 
-                                            ${isSelected ? (isCorrect ? 'correct' : 'wrong') : ''} 
-                                            ${selectedAnswer !== null ? (isSelected ? 'chosen' : 'not-chosen') : ''}`}
+                                        className={buttonClass}
                                         onClick={() => handleAnswerClick(data[currentIndex][key],i + 1)}
                                         disabled={selectedAnswer !== null}
                                     >
                                         {data[currentIndex][key]}
-                                        {isSelected && (isCorrect ? ' ✔️' : ' ❌')}
+                                        {isSelected && (isCorrect ? ' ✔️' : <span className="wrong-symbol"><FontAwesomeIcon icon={faTimes} /></span>)}
                                     </button>
                                 );
                             })}

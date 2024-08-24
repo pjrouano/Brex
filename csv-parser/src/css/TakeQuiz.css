@@ -108,9 +108,15 @@
 }
 
 .answer-button.wrong {
-    background-color: #ffffff; /* White background for wrong answers */
-    color: #333333; /* Dark text color for wrong answers */
-    border-color: #f5c6cb; /* Light red border for wrong answers */
+    background-color: red; /* Red background for wrong answer */
+    border-color: red;
+}
+
+.answer-button.not-chosen {
+    background-color: white; /* White background for not chosen answers */
+    color: black;
+    border-color: white;
+    opacity: 0.5; /* Reduce opacity for not chosen answers */
 }
 
 .answer-button.disabled,
@@ -185,4 +191,13 @@
 .score-section {
     margin-top: 20px;
     color: #333333; /* Dark text color for the score section */
+}
+
+.wrong-symbol {
+    color: white; /* White color for the 'X' symbol */
+    font-weight: bold; /* Make the symbol bold */
+    font-size: 1.5em; /* Increase the size of the symbol */
+    margin-left: 10px; /* Add space between text and symbol */
+    display: inline-block;
+    vertical-align: middle; /* Center align the symbol */
 }
