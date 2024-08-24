@@ -7,6 +7,9 @@ function TakeQuiz() {
     const { id } = useParams();
     const [data,setData] = useState([]);
     const [currentIndex,setCurrentIndex] = useState(0);
+    const [selectedAnswer,setSelectedAnswer] = useState(null);
+    const [correctAnswers,setCorrectAnswers] = useState(0);
+    const [wrongAnswers,setWrongAnswers] = useState(0);
 
     useEffect(() => {
         // Fetch and parse the specific CSV file based on the ID
@@ -29,20 +32,41 @@ function TakeQuiz() {
         }
     };
 
+    const handleAnswerClick = (answer,answerIndex) => {
+        setSelectedAnswer(answer);
+        if (answerIndex === data[currentIndex]['CorrectAns']) {
+            setCorrectAnswers(correctAnswers + 1);
+        } else {
+            setWrongAnswers(wrongAnswers + 1);
+        }
+    };
+
     const handleNext = () => {
+        setSelectedAnswer(null);
         setCurrentIndex((prevIndex) => (prevIndex + 1) % data.length);
     };
 
     const handlePrevious = () => {
+        setSelectedAnswer(null);
         setCurrentIndex((prevIndex) => (prevIndex - 1 + data.length) % data.length);
+    };
+
+    const containsImgTag = (htmlString) => {
+        const imgTagRegex = /<img\s+[^>]*src="[^"]*"[^>]*>/i;
+        return imgTagRegex.test(htmlString);
     };
 
     return (
         <div className="quiz-container">
-            <h1>Quiz for Module {id}</h1>
-            {data.length > 0 ? (
-                <div className="quiz-content">
+            {data.length > 0 && data[currentIndex] ? (
+                <div className="quiz-card">
+                    <div className="progress-bar">
+                        <div className="progress" style={{ width: `${((currentIndex + 1) / data.length) * 100}%` }}></div>
+                    </div>
                     <div className="question-section">
+                        <div className="question-number">
+                            {`${currentIndex + 1}/${data.length}`}
+                        </div>
                         <h2>{data[currentIndex]['Question']}</h2>
                         {data[currentIndex]['Image'] && (
                             <div className="image-container">
@@ -52,22 +76,42 @@ function TakeQuiz() {
                     </div>
                     <div className="answers-section">
                         {Object.keys(data[currentIndex])
-                            .filter(key => key.startsWith('Answer'))
-                            .map((key,i) => (
-                                <button key={i} className={`answer-button answer-${i + 1}`}>
-                                    {data[currentIndex][key]}
-                                </button>
-                            ))}
+                            .filter(key => key.startsWith('Answer') && data[currentIndex][key])
+                            .map((key,i) => {
+                                const isSelected = selectedAnswer === data[currentIndex][key];
+                                const isCorrect = i + 1 === data[currentIndex]['CorrectAns'];
+                                return (
+                                    <button
+                                        key={i}
+                                        className={`answer-button answer-${i + 1} 
+                                            ${isSelected ? (isCorrect ? 'correct' : 'wrong') : ''} 
+                                            ${selectedAnswer !== null ? (isSelected ? 'chosen' : 'not-chosen') : ''}`}
+                                        onClick={() => handleAnswerClick(data[currentIndex][key],i + 1)}
+                                        disabled={selectedAnswer !== null}
+                                    >
+                                        {data[currentIndex][key]}
+                                        {isSelected && (isCorrect ? ' ✔️' : ' ❌')}
+                                    </button>
+                                );
+                            })}
                     </div>
-                    <div className="explanation-section">
-                        <h3>Correct Explanation</h3>
-                        <p dangerouslySetInnerHTML={{ __html: data[currentIndex]['CorrectExplanation'] }}></p>
-                        <h3>Incorrect Explanation</h3>
-                        <p dangerouslySetInnerHTML={{ __html: data[currentIndex]['IncorrectExplanation'] }}></p>
-                    </div>
+                    {selectedAnswer && (
+                        <div className="explanation-section">
+                            <h3>Explanation</h3>
+                            {containsImgTag(data[currentIndex]['CorrectExplanation']) ? (
+                                <div className="explanation-image-container" dangerouslySetInnerHTML={{ __html: data[currentIndex]['CorrectExplanation'] }}></div>
+                            ) : (
+                                <p dangerouslySetInnerHTML={{ __html: data[currentIndex]['CorrectExplanation'] }}></p>
+                            )}
+                        </div>
+                    )}
                     <div className="navigation">
                         <button onClick={handlePrevious} disabled={currentIndex === 0}>Previous</button>
                         <button onClick={handleNext} disabled={currentIndex === data.length - 1}>Next</button>
+                    </div>
+                    <div className="score-section">
+                        <p>Correct Answers: {correctAnswers}</p>
+                        <p>Wrong Answers: {wrongAnswers}</p>
                     </div>
                 </div>
             ) : (
