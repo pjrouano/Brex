@@ -13,9 +13,9 @@ function CsvViewer() {
 
     const fetchUploadedFiles = async () => {
         try {
-            const filePaths = await fetch('http://localhost:10000/uploaded-files').then(res => res.json());
+            const filePaths = await fetch('http://localhost:5000/uploaded-files').then(res => res.json());
             const dataPromises = filePaths.map(filePath =>
-                fetch(`http://localhost:10000${filePath}`)
+                fetch(`http://localhost:5000${filePath}`)
                     .then(response => response.text())
                     .then(csvText => {
                         return new Promise((resolve) => {
@@ -54,7 +54,7 @@ function CsvViewer() {
         const dataSetToDelete = dataSets[index];
         try {
             // Delete dataset from server
-            const response = await fetch(`http://localhost:10000/delete-dataset`,{
+            const response = await fetch(`http://localhost:5000/delete-dataset`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
