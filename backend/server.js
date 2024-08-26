@@ -9,7 +9,7 @@ const app = express()
 const PORT = process.env.PORT || 5000
 
 app.use(cors({
-    origin: 'https://brex-jet.vercel.app/' // Replace with the domain where your frontend is hosted
+    origin: 'https://brex-backend.vercel.app/' // Replace with the domain where your frontend is hosted
 }))
 app.use(express.json())
 
