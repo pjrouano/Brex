@@ -74,3 +74,8 @@ app.get("/uploaded-files", (req, res) => {
 		res.json(filePaths)
 	})
 })
+
+// Define a root route handler
+app.get('/', (req, res) => {
+	res.status(200).send('Welcome to my API');
+});
