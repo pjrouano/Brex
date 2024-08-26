@@ -14,7 +14,7 @@ app.use(cors({
 }));
 
 // Or to allow all origins
-app.use(cors());
+//app.use(cors());
 
 app.use(express.json())
 
