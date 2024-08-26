@@ -174,12 +174,12 @@
     border-radius: 5px;
 }
 
-.nav-button.current {
-    background-color: #ffc0cb; /* Pink color for the active state */
+.nav-button.correct {
+    background-color: #90EE90; /* Light green color */
 }
 
-.nav-button.answered {
-    background-color: #d3d3d3; /* Light gray to indicate answered */
+.nav-button.wrong {
+    background-color: #FFB6C1; /* Light red color */
 }
 
 .nav-button.has-image {

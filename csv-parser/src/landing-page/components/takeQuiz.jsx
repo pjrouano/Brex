@@ -152,15 +152,23 @@ function TakeQuiz() {
                         </div>
                     )}
                     <div className="quiz-navigation">
-                        {data.map((item, index) => (
-                            <button
-                                key={index}
-                                className={`nav-button ${index === currentIndex ? 'current' : ''} ${answeredQuestions.has(index) ? 'answered' : ''} ${item.Image ? 'has-image' : ''}`}
-                                onClick={() => setCurrentIndex(index)}
-                            >
-                                {item.Image ? 'i' : index + 1}
-                            </button>
-                        ))}
+                        {data.map((item, index) => {
+                            const isAnswered = answeredQuestions.has(index);
+                            // Assuming CorrectAns stores the index of the correct answer starting from 1, and the answers are stored like Answer1, Answer2, etc.
+                            const correctAnswerIndex = item['CorrectAns'];
+                            const selectedAnswerText = selectedAnswers[index];
+                            const isCorrect = item[`Answer${correctAnswerIndex}`] === selectedAnswerText;
+                            let navButtonClass = `nav-button ${index === currentIndex ? 'current' : ''} ${isAnswered ? (isCorrect ? 'correct' : 'wrong') : ''}`;
+                            return (
+                                <button
+                                    key={index}
+                                    className={navButtonClass}
+                                    onClick={() => setCurrentIndex(index)}
+                                >
+                                    {item.Image ? 'i' : index + 1}
+                                </button>
+                            );
+                        })}
                     </div>
                     <div className="navigation">
                         <button onClick={handlePrevious} disabled={currentIndex === 0 || isFinished}>Previous</button>
