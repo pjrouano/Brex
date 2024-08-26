@@ -43,7 +43,7 @@ function TakeQuiz() {
 
     const fetchUploadedFileById = async (id) => {
         try {
-            const filePath = `http://localhost:5000/uploads/Module ${id} Baseline Exam.csv`;
+            const filePath = `https://brex-backend.vercel.app/uploads/Module ${id} Baseline Exam.csv`;
             const csvText = await fetch(filePath).then(response => response.text());
             Papa.parse(csvText, {
                 header: true, // Ensures the first row is treated as headers

@@ -22,7 +22,7 @@ const seeQuiz = () => {
 
     useEffect(() => {
         // Fetch the list of uploaded quizzes from the backend
-        axios.get('http://localhost:5000/uploaded-files')
+        axios.get('https://brex-backend.vercel.app/uploaded-files')
             .then(response => {
                 setQuizzes(response.data);
                 console.log(quizzes)
