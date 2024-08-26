@@ -158,9 +158,38 @@
     border-radius: 10px;
 }
 
+.quiz-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.nav-button {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.nav-button.current {
+    background-color: #ffc0cb; /* Pink color for the active state */
+}
+
+.nav-button.answered {
+    background-color: #d3d3d3; /* Light gray to indicate answered */
+}
+
+.nav-button.has-image {
+    font-style: italic;
+}
+
 .navigation {
     display: flex;
     justify-content: space-between;
+    padding: 10px;
 }
 
 .navigation button {
