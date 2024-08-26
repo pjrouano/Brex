@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
+import { red } from '@mui/material/colors';
 
 const logoStyle = {
   width: '50px',
@@ -88,22 +89,16 @@ function AppAppBar({ mode,toggleColorMode }) {
                 alt="logo of sitemark"
               />
               <Box sx={{ display: { xs: 'none',md: 'flex' } }}>
-                <MenuItem
-                  onClick={() => scrollToSection('features')}
-                  sx={{ py: '6px',px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Assessment
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => scrollToSection('testimonials')}
-                  sx={{ py: '6px',px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Upload Assessment
-                  </Typography>
-                </MenuItem>
+                  <Button
+                  style={{ color: '#B60092' }}
+                    component="a"
+                    href="/Upload-Assessment" // Update this line
+                  >
+                    <Typography variant="body2">
+                      Upload Assessment
+                    </Typography>
+                  </Button>
+                
               </Box>
             </Box>
             <Box
@@ -163,13 +158,14 @@ function AppAppBar({ mode,toggleColorMode }) {
                     }}
                   >
                     {/*<ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />*/}
-                  </Box>
-                  <MenuItem onClick={() => scrollToSection('assessment')}>
-                    Assessment
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection('testimonials')}>
-                    Upload Assessment
-                  </MenuItem>
+                  </Box> 
+                    <Button
+                      component="a"
+                      href="/Upload-Assessment" // Update this line
+                      sx={{ width: '100%'}}
+                    >
+                      Upload Assessment
+                    </Button>
                   <Divider />
                   <MenuItem>
                     <Button
