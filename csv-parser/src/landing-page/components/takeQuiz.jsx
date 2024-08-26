@@ -15,6 +15,7 @@ function TakeQuiz() {
     const [isFinished, setIsFinished] = useState(false);
     const [showConfirmFinish, setShowConfirmFinish] = useState(false); // New state for showing confirmation
     const [answeredQuestions, setAnsweredQuestions] = useState(new Set()); // Tracks indices of answered questions
+    const [showNavigation, setShowNavigation] = useState(false); // Add a new state for toggling the navigation visibility
 
     useEffect(() => {
         // Load saved state from localStorage when the component mounts
@@ -151,8 +152,14 @@ function TakeQuiz() {
                             )}
                         </div>
                     )}
+                    {/* Button to toggle navigation visibility, placed above the navigation section and centered */}
+                    <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                        <button onClick={() => setShowNavigation(!showNavigation)}>
+                            {showNavigation ? 'Hide Navigation' : 'Show Navigation'}
+                        </button>
+                    </div>
                     <div className="quiz-navigation">
-                        {data.map((item, index) => {
+                        {showNavigation && data.map((item, index) => {
                             const isAnswered = answeredQuestions.has(index);
                             // Assuming CorrectAns stores the index of the correct answer starting from 1, and the answers are stored like Answer1, Answer2, etc.
                             const correctAnswerIndex = item['CorrectAns'];
