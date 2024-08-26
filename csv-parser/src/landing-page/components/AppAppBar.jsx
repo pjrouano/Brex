@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -20,8 +21,9 @@ const logoStyle = {
   marginLeft: '20px'
 };
 
-function AppAppBar({ mode,toggleColorMode }) {
-  const [open,setOpen] = React.useState(false);
+function AppAppBar({ mode, toggleColorMode }) {
+  const navigate = useNavigate(); // Initialize useNavigate
+  const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -88,22 +90,20 @@ function AppAppBar({ mode,toggleColorMode }) {
                 style={logoStyle}
                 alt="logo of sitemark"
               />
-              <Box sx={{ display: { xs: 'none',md: 'flex' } }}>
-                  <Button
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <Button
                   style={{ color: '#B60092' }}
-                    component="a"
-                    href="/Upload-Assessment" // Update this line
-                  >
-                    <Typography variant="body2">
-                      Upload Assessment
-                    </Typography>
-                  </Button>
-                
+                  onClick={() => navigate('/Upload-Assessment')} // Use navigate instead of href
+                >
+                  <Typography variant="body2">
+                    Upload Assessment
+                  </Typography>
+                </Button>
               </Box>
             </Box>
             <Box
               sx={{
-                display: { xs: 'none',md: 'flex' },
+                display: { xs: 'none', md: 'flex' },
                 gap: 0.5,
                 alignItems: 'center',
               }}
@@ -130,13 +130,13 @@ function AppAppBar({ mode,toggleColorMode }) {
                 Sign up
               </Button>
             </Box>
-            <Box sx={{ display: { sm: '',md: 'none' } }}>
+            <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
                 variant="text"
                 style={{ color: '#B60092' }}
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-                sx={{ minWidth: '30px',p: '4px' }}
+                sx={{ minWidth: '30px', p: '4px' }}
               >
                 <MenuIcon />
               </Button>
@@ -158,14 +158,13 @@ function AppAppBar({ mode,toggleColorMode }) {
                     }}
                   >
                     {/*<ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />*/}
-                  </Box> 
-                    <Button
-                      component="a"
-                      href="/Upload-Assessment" // Update this line
-                      sx={{ width: '100%'}}
-                    >
-                      Upload Assessment
-                    </Button>
+                  </Box>
+                  <Button
+                    onClick={() => navigate('/Upload-Assessment')} // Use navigate instead of href
+                    sx={{ width: '100%' }}
+                  >
+                    Upload Assessment
+                  </Button>
                   <Divider />
                   <MenuItem>
                     <Button
@@ -202,7 +201,7 @@ function AppAppBar({ mode,toggleColorMode }) {
 }
 
 AppAppBar.propTypes = {
-  mode: PropTypes.oneOf(['dark','light']).isRequired,
+  mode: PropTypes.oneOf(['dark', 'light']).isRequired,
   toggleColorMode: PropTypes.func.isRequired,
 };
 
