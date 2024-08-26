@@ -8,9 +8,7 @@ const fs = require("fs")
 const app = express()
 const PORT = process.env.PORT || 5000
 
-app.use(cors({
-    origin: 'https://brex-backend.vercel.app/' // Replace with the domain where your frontend is hosted
-}))
+app.use(cors({ origin:true, credentials:true}))
 app.use(express.json())
 
 // Serve static files from the "uploads" directory
