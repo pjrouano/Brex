@@ -8,50 +8,45 @@ const fs = require("fs")
 const app = express()
 const PORT = process.env.PORT || 5000
 
-// To allow specific origin
-//app.use(cors({
-//    origin: 'https://brex-jet.vercel.app'
-//}));
+// CORS options
+const corsOptions = {
+	origin: 'https://brex-jet.vercel.app', // Allow only this origin to access
+	optionsSuccessStatus: 200 // For legacy browser support
+};
 
-// Or to allow all origins
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.json())
 
 // Serve static files from the "uploads" directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
-// Adjusted multer configuration
+// Local storage for multer
 const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		const uploadPath = path.join(__dirname, "uploads")
-		if (!fs.existsSync(uploadPath)) {
-			fs.mkdirSync(uploadPath)
-		}
-		cb(null, uploadPath)
+	destination: function (req, file, cb) {
+		cb(null, 'uploads/')
 	},
-	filename: (req, file, cb) => {
-		// Detect and convert filename from "module-{number}-baseline-exam" to "Module {number} Baseline Exam.csv"
-		const pattern = /module-(\d+)-baseline-exam/i;
-		const match = file.originalname.match(pattern);
+	filename: function (req, file, cb) {
+		// Extract the module number from the original filename
+		const match = file.originalname.match(/module-(\d+)-baseline-exam/);
 		if (match) {
-			const moduleNumber = match[1]; // Extract the module number
-			cb(null, `Module ${moduleNumber} Baseline Exam.csv`);
+			const moduleNumber = match[1];
+			const newFilename = `Module ${moduleNumber} Baseline Exam.csv`;
+			cb(null, newFilename);
 		} else {
-			// Default filename if pattern does not match, ensuring it ends with .csv
-			cb(null, file.originalname.endsWith('.csv') ? file.originalname : `${file.originalname}.csv`);
+			// Default filename if pattern does not match
+			const defaultFilename = `UnknownFormat.csv`;
+			cb(null, defaultFilename);
 		}
-	},
-})
+	}
+});
 
-const upload = multer({ storage })
+const uploadHandler = multer({ storage: storage });
 
-// Endpoint to handle file upload
-app.post("/upload", upload.array("files", 10), (req, res) => {
-	// Allow up to 10 files
-	const filePaths = req.files.map((file) => `/uploads/${file.filename}`)
-	res.json({ filePaths })
-})
+// Update the upload endpoint to use the new uploadHandler
+app.post('/upload', cors(corsOptions), uploadHandler.single('file'), (req, res) => {
+	res.send('File uploaded successfully.');
+});
 
 // Endpoint to delete a dataset
 app.post("/delete-dataset", (req, res) => {
@@ -93,26 +88,4 @@ app.get("/uploaded-files", (req, res) => {
 // Define a root route handler
 app.get('/', (req, res) => {
 	res.status(200).send('Welcome to my API');
-});
-
-const storage_new = new Storage({
-  projectId: 'crucial-module-415112',
-  keyFilename: './csv-parser/crucial-module-415112-4f5effd08681.json'
-});
-
-const uploadHandler = multer({
-  storage: new MulterGoogleCloudStorage({
-    bucket: 'crucial-module-415112',
-    projectId: 'crucial-module-415112',
-    keyFilename: './csv-parser/crucial-module-415112-4f5effd08681.json',
-    filename: (req, file, cb) => {
-      // Optional. By default, it will save as original filename in the bucket
-      const newFilename = `${Date.now()}_${file.originalname}`;
-      cb(null, newFilename);
-    }
-  })
-});
-
-app.post('/upload', uploadHandler.single('file'), (req, res) => {
-  res.send('File uploaded successfully.');
 });
