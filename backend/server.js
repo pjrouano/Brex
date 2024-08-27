@@ -94,3 +94,25 @@ app.get("/uploaded-files", (req, res) => {
 app.get('/', (req, res) => {
 	res.status(200).send('Welcome to my API');
 });
+
+const storage_new = new Storage({
+  projectId: 'crucial-module-415112',
+  keyFilename: './csv-parser/crucial-module-415112-4f5effd08681.json'
+});
+
+const uploadHandler = multer({
+  storage: new MulterGoogleCloudStorage({
+    bucket: 'crucial-module-415112',
+    projectId: 'crucial-module-415112',
+    keyFilename: './csv-parser/crucial-module-415112-4f5effd08681.json',
+    filename: (req, file, cb) => {
+      // Optional. By default, it will save as original filename in the bucket
+      const newFilename = `${Date.now()}_${file.originalname}`;
+      cb(null, newFilename);
+    }
+  })
+});
+
+app.post('/upload', uploadHandler.single('file'), (req, res) => {
+  res.send('File uploaded successfully.');
+});
