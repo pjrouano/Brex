@@ -9,12 +9,12 @@ const app = express()
 const PORT = process.env.PORT || 5000
 
 // To allow specific origin
-app.use(cors({
-    origin: 'https://brex-jet.vercel.app'
-}));
+//app.use(cors({
+//    origin: 'https://brex-jet.vercel.app'
+//}));
 
 // Or to allow all origins
-//app.use(cors());
+app.use(cors());
 
 app.use(express.json())
 
@@ -31,8 +31,16 @@ const storage = multer.diskStorage({
 		cb(null, uploadPath)
 	},
 	filename: (req, file, cb) => {
-		// Ensure Date.now() is converted to string explicitly
-		cb(null, `${Date.now()}-${file.originalname}`)
+		// Detect and convert filename from "module-{number}-baseline-exam" to "Module {number} Baseline Exam.csv"
+		const pattern = /module-(\d+)-baseline-exam/i;
+		const match = file.originalname.match(pattern);
+		if (match) {
+			const moduleNumber = match[1]; // Extract the module number
+			cb(null, `Module ${moduleNumber} Baseline Exam.csv`);
+		} else {
+			// Default filename if pattern does not match, ensuring it ends with .csv
+			cb(null, file.originalname.endsWith('.csv') ? file.originalname : `${file.originalname}.csv`);
+		}
 	},
 })
 
