@@ -8,12 +8,13 @@ const fs = require("fs")
 const app = express()
 const PORT = process.env.PORT || 5000
 
-// CORS options
+// Ensure CORS is required and configured correctly
 const corsOptions = {
 	origin: 'https://brex-jet.vercel.app', // Allow only this origin to access
 	optionsSuccessStatus: 200 // For legacy browser support
 };
 
+// Apply CORS middleware globally (recheck this placement)
 app.use(cors(corsOptions));
 
 app.use(express.json())
@@ -43,9 +44,15 @@ const storage = multer.diskStorage({
 
 const uploadHandler = multer({ storage: storage });
 
-// Update the upload endpoint to use the new uploadHandler
+// Update the upload endpoint with added error handling
 app.post('/upload', cors(corsOptions), uploadHandler.single('file'), (req, res) => {
+	if (!req.file) {
+		return res.status(400).send('No file uploaded.');
+	}
 	res.send('File uploaded successfully.');
+}).catch(err => {
+	console.error("Upload error:", err);
+	res.status(500).send("Internal Server Error");
 });
 
 // Endpoint to delete a dataset
